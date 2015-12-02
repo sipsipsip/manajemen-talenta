@@ -24,6 +24,6 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-Route::get('test', function(){
-	return "siap testing";
+Route::get('/', function(){
+	return view('react');
 });
