@@ -24,6 +24,7 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-Route::get('test', function(){
-    return view('test');
+
+Route::get('/', function(){
+	return view('react');
 });
