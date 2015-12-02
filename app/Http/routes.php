@@ -25,5 +25,5 @@ Route::controllers([
 ]);
 
 Route::get('test', function(){
-	return "siap testing";
+    return view('test');
 });
