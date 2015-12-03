@@ -15,26 +15,27 @@ var Table = ReactBootstrap.Table;
 var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
 
+var ReactChart = require('react-chartjs');
+var Pie = ReactChart.Pie;
 
 
 var TableTalentSummary = React.createClass({
+    getInitialState: function(){
+        return {
+            pie: []
+        }
+    },
 
 	_olahData: function(){
-		kuadran = {};
-		kuadran.sembilan = this.props.data.filter(function(item){
-			return item == 9;
-		});
-		kuadran.delapan = this.props.data.filter(function(item){
-			return item == 8;
-		});
+        console.warn(this.props.data)
 
-		console.log(kuadran)
 	},
     render: function(){
     	this._olahData();
         return (
             <div>
-        		       
+                <Pie data={this.props.data}/>
+
             </div>
         )
     }

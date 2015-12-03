@@ -16,6 +16,8 @@ var Table = ReactBootstrap.Table;
 var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
 
+var math = require('mathjs');
+
 var RowTalent = require('../components/RowTalent.react');
 var HelperKompetensi = require('../components/HelperKompetensi.react');
 var TableTalentSummary = require('../components/TableTalentSummary.react');
@@ -39,7 +41,21 @@ var TableTalent = React.createClass({
                 alpha_low:0,
                 constant: 1.036
 
-            }
+            },
+            summary: [
+                         {
+                             value : 1,
+                             label : 'bla',
+                             color : 'blue',
+                             highlight : 'red',
+                         },
+                         {
+                             value : 4,
+                             label : 'bli',
+                             color : 'red',
+                             highlight : 'blue',
+                         }
+                     ]
         }
     },
     loadData: function(){
@@ -75,12 +91,14 @@ var TableTalent = React.createClass({
         helper.min_kompetensi = _.min(items);
         helper.total_kompetensi = _.sum(items);
         helper.average_kompetensi = _.sum(items) / items.length;
-        helper.std_kompetensi = 0.33333333;
+        helper.std_kompetensi = math.std(items);
         helper.constant = 1.036;
         helper.alpha_high = helper.average_kompetensi + (helper.constant*helper.std_kompetensi);
         helper.alpha_low = helper.average_kompetensi + (-helper.constant * helper.std_kompetensi)
 
         this.setState({helper: helper});
+
+        this.setState({summary: this._getSummaryData()});
 
 
     },
@@ -117,12 +135,33 @@ var TableTalent = React.createClass({
 
             return item;
         }.bind(this));
-        
+
         var kuadran_only = items_with_kuadran.map(function(item){
             return item.kuadran;
         }) ;
 
-        return kuadran_only;
+        data = kuadran_only;
+
+		var arr = [];
+		data.map(function(item, i){
+		    if(arr[item]){
+		        arr[item].value++;
+		    } else {
+		        arr[item] = {};
+		        arr[item].value = 1;
+		        arr[item].label = item;
+		        arr[item].color = 'red';
+		        arr[item].highlight = 'blue';
+		    }
+		});
+        chart_data = [];
+        arr.map(function(item, i){
+            chart_data.push(item)
+        });
+
+		console.log(chart_data)
+
+        return chart_data;
     },
     render: function(){
         var component = this;
@@ -131,7 +170,7 @@ var TableTalent = React.createClass({
             <div>
                 <HelperKompetensi data={this.state.helper}/>
                 <hr/>
-                <TableTalentSummary data={this._getSummaryData()} />
+
                 <hr/>
                 <table className="table-striped table">
                     <thead>

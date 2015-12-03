@@ -72,7 +72,6 @@ var RowTalent = React.createClass({
             <tr>
                 <td>{this.props.no}</td>
                 <td>{this.props.nama}</td>
-                <td>.</td>
                 <td>{this.props.nip}</td>
                 <td>{this.props.usia}</td>
                 <td>{this.props.unit}</td>
