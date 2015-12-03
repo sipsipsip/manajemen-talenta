@@ -14,6 +14,16 @@ var Table = ReactBootstrap.Table;
 var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
 
+var SimpleTabs = require('react-simpletabs');
+
+
+var ReactTabs = require('react-tabs');
+var Tab = ReactTabs.Tab;
+var Tabs = ReactTabs.Tabs;
+var TabList = ReactTabs.TabList;
+var TabPanel = ReactTabs.TabPanel;
+
+
 // Component
 var TableTalent = require('../components/TableTalent.react');
 
@@ -23,8 +33,20 @@ var MainPage = React.createClass({
         return (
             <Row>
                 <Col lg={12}>
-                    <TableTalent source="pegawai.json"/>
-                    <TableTalent source="pegawai2.json"/>
+                    <Tabs>
+                        <TabList>
+                            <Tab>Eselon II</Tab>
+                            <Tab>Eselon Lain</Tab>
+                        </TabList>
+
+                        <TabPanel>
+                            <TableTalent source="pegawai.json"/>
+                        </TabPanel>
+                        <TabPanel>
+                            <TableTalent source="pegawai2.json"/>
+                        </TabPanel>
+                    </Tabs>
+                    
                 </Col>
             </Row>
         )

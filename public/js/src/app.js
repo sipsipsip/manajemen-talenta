@@ -18,9 +18,8 @@ var App = React.createClass({
 
 	render: function(){
 		return (
-
-		        <div className="container-fluid">
-				    {this.props.children}
+        <div className="container-fluid">
+          {this.props.children}
 				</div>
 			)
 	}

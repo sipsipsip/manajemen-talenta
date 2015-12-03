@@ -42,7 +42,32 @@ var RowTalent = React.createClass({
             nkp: this.props.nkp
         });
     },
+    _getKuadran: function(){
+        kuadran = 0;
+
+        if(this.props.rangeKompetensi == "tinggi" && this.props.rangeNKP == "tinggi"){
+            kuadran = 9
+        } else if(this.props.rangeKompetensi == "sedang" && this.props.rangeNKP == "tinggi"){
+            kuadran = 8
+        } else if(this.props.rangeKompetensi == "rendah" && this.props.rangeNKP == "tinggi"){
+            kuadran = 7
+        } else if(this.props.rangeKompetensi == "tinggi" && this.props.rangeNKP == "sedang"){
+            kuadran = 6
+        } else if(this.props.rangeKompetensi == "sedang" && this.props.rangeNKP == "sedang"){
+            kuadran = 5
+        } else if(this.props.rangeKompetensi == "rendah" && this.props.rangeNKP == "sedang"){
+            kuadran = 4
+        } else if(this.props.rangeKompetensi == "tinggi" && this.props.rangeNKP == "rendah"){
+            kuadran = 3
+        } else if(this.props.rangeKompetensi == "sedang" && this.props.rangeNKP == "rendah"){
+            kuadran = 2
+        } else if(this.props.rangeKompetensi == "rendah" && this.props.rangeNKP == "rendah"){
+            kuadran = 1
+        }
+  
+    },
     render: function(){
+        this._getKuadran();
         return (
             <tr>
                 <td>{this.props.no}</td>
@@ -62,16 +87,16 @@ var RowTalent = React.createClass({
                 <td>
                     <input type="number" className="form-control" disabled="disabled" value={parseInt(this.state.ku)+parseInt(this.state.ki)} onChange={this._onChange.bind(null, 'kom')}/>
                 </td>
-                <td>zscore = {this.props.zScore}</td>
+                {/*<td>zscore = {this.props.zScore}</td>*/} 
                 <td>{this.props.rangeKompetensi}</td>
                 <td>
                     <input type="number" className="form-control" value={this.state.nkp} onChange={this._onChange.bind(null, 'nkp')}/>
                 </td>
                 <td>
-                    range
+                    {this.props.rangeNKP}
                 </td>
                 <td>
-                    kuadran x
+                    kuadran {kuadran}
                 </td>
             </tr>
         )

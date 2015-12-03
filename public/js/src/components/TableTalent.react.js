@@ -17,6 +17,8 @@ var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
 
 var RowTalent = require('../components/RowTalent.react');
+var HelperKompetensi = require('../components/HelperKompetensi.react');
+var TableTalentSummary = require('../components/TableTalentSummary.react');
 
 
 
@@ -59,6 +61,8 @@ var TableTalent = React.createClass({
         var newState = this.state.items;
         newState[index] = rowValue;
         this.setState(newState, this._populateHelper)
+
+        status = (parseInt(rowValue.nkp) < 75) ? "rendah" : (parseInt(rowValue.nkp) < 90) ? "sedang" : "tinggi";
     },
     _populateHelper: function(){
         var helper = this.state.helper;
@@ -76,28 +80,61 @@ var TableTalent = React.createClass({
         helper.alpha_high = helper.average_kompetensi + (helper.constant*helper.std_kompetensi);
         helper.alpha_low = helper.average_kompetensi + (-helper.constant * helper.std_kompetensi)
 
-        this.setState(helper);
+        this.setState({helper: helper});
 
+
+    },
+    _getSummaryData: function(){
+        var items_with_kuadran = this.state.items.map(function(item, i){
+            item.rangeKompetensi = (item.ku + item.ki) > this.state.helper.alpha_high ? "tinggi" : (item.ku + item.ki) < this.state.helper.alpha_low ? "rendah" : "sedang";
+            item.rangeNKP = (parseInt(item.nkp) < 75) ? "rendah" : (parseInt(item.nkp) < 90) ? "sedang" : "tinggi";
+
+                
+                // Kuadran
+                kuadran = 0;
+
+                if(item.rangeKompetensi == "tinggi" && item.rangeNKP == "tinggi"){
+                    kuadran = 9
+                } else if(item.rangeKompetensi == "sedang" && item.rangeNKP == "tinggi"){
+                    kuadran = 8
+                } else if(item.rangeKompetensi == "rendah" && item.rangeNKP == "tinggi"){
+                    kuadran = 7
+                } else if(item.rangeKompetensi == "tinggi" && item.rangeNKP == "sedang"){
+                    kuadran = 6
+                } else if(item.rangeKompetensi == "sedang" && item.rangeNKP == "sedang"){
+                    kuadran = 5
+                } else if(item.rangeKompetensi == "rendah" && item.rangeNKP == "sedang"){
+                    kuadran = 4
+                } else if(item.rangeKompetensi == "tinggi" && item.rangeNKP == "rendah"){
+                    kuadran = 3
+                } else if(item.rangeKompetensi == "sedang" && item.rangeNKP == "rendah"){
+                    kuadran = 2
+                } else if(item.rangeKompetensi == "rendah" && item.rangeNKP == "rendah"){
+                    kuadran = 1
+                }
+
+            item.kuadran = kuadran;
+
+            return item;
+        }.bind(this));
+        
+        var kuadran_only = items_with_kuadran.map(function(item){
+            return item.kuadran;
+        }) ;
+
+        return kuadran_only;
     },
     render: function(){
         var component = this;
+
         return (
             <div>
-                <div>
-                    <h4>Helper Kompetensi</h4>
-                    MAX : {this.state.helper.max_kompetensi} |
-                    MIN : {this.state.helper.min_kompetensi} |
-                    TOTAL : {this.state.helper.total_kompetensi} |
-                    AVERAGE : {this.state.helper.average_kompetensi} |
-                    TALE AREA : {this.state.helper.tale_area_kompetensi * 100 + '%'} |
-                    STD : {this.state.helper.std_kompetensi} |
-                    ALPHA (hi) : {this.state.helper.alpha_high} |
-                    ALPHA (lo) : {this.state.helper.alpha_low}
-                </div>
-
+                <HelperKompetensi data={this.state.helper}/>
+                <hr/>
+                <TableTalentSummary data={this._getSummaryData()} />
                 <hr/>
                 <table className="table-striped table">
-                   {/* <thead>
+                    <thead>
                         <tr>
                             <th>No</th>
                             <th>Nama Pegawai</th>
@@ -115,7 +152,7 @@ var TableTalent = React.createClass({
                             <th>Kuadran</th>
                         </tr>
                     </thead>
-                    */}
+                    
                     <tbody>
                         {this.state.items.map(function(item, i){
                             return (
@@ -132,8 +169,9 @@ var TableTalent = React.createClass({
                                     ki={item.ki}
                                     nkp={item.nkp}
 
-                                    rangeKompetensi={(item.ku + item.ki) > component.state.alpha_high ? "tinggi" : (item.ku + item.ki) < component.state.alpha_low ? "rendah" : "sedang"}
+                                    rangeKompetensi={(item.ku + item.ki) > component.state.helper.alpha_high ? "tinggi" : (item.ku + item.ki) < component.state.helper.alpha_low ? "rendah" : "sedang"}
                                     zScore={((item.ku+item.ki) - component.state.helper.average_kompetensi) / component.state.helper.std_kompetensi}
+                                    rangeNKP = {(parseInt(item.nkp) < 75) ? "rendah" : (parseInt(item.nkp) < 90) ? "sedang" : "tinggi"}
 
                                     onValueChange={component._rowValueChange}
                                     />
