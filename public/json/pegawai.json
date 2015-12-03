@@ -1,0 +1,92 @@
+[
+  {
+    "nama": "Pegawai A",
+    "nip": "199107312013101002",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai B",
+    "nip": "199107312013101001",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai C",
+    "nip": "199107312013101003",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai D",
+    "nip": "199107312013101004",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai E",
+    "nip": "199107312013101005",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai F",
+    "nip": "199107312013101006",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai G",
+    "nip": "199107312013101007",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai H",
+    "nip": "199107312013101008",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  },
+  {
+    "nama": "Pegawai I",
+    "nip": "199107312013101009",
+    "unit": "BSIP",
+    "nama_jabatan": "Pelaksana",
+    "eselon": "Pelaksana",
+    "ku": 7,
+    "ki": 7,
+    "nkp":114
+  }
+]
