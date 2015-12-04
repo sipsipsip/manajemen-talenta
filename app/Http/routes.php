@@ -28,3 +28,8 @@ Route::controllers([
 Route::get('/', function(){
 	return view('react');
 });
+
+Route::group(['prefix'=>'api/v1'], function(){
+
+	Route::get('talent-section/{id}/talent-score', 'ApiController@getTalentScoreOfSection');
+});

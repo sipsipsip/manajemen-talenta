@@ -23,6 +23,8 @@ var HelperKompetensi = require('../components/HelperKompetensi.react');
 var TableTalentSummary = require('../components/TableTalentSummary.react');
 
 
+var TalentSectionService = require('../services/TalentSection.service');
+
 
 
 var TableTalent = React.createClass({
@@ -59,14 +61,22 @@ var TableTalent = React.createClass({
         }
     },
     loadData: function(){
-        $.ajax({
-            method: 'GET',
-            url: 'json/'+this.props.source,
-            cache: false,
-            success: function(data){
-                this.setState({items: data}, this._populateHelper);
-            }.bind(this)
-        })
+        // $.ajax({
+        //     method: 'GET',
+        //     url: 'json/'+this.props.source,
+        //     cache: false,
+        //     success: function(data){
+        //         this.setState({items: data}, this._populateHelper);
+        //     }.bind(this)
+        // })
+
+        TalentSectionService.getTalentScoreList()
+        .success(function(res){
+                this.setState({items: res}, this._populateHelper);
+        }.bind(this))
+        .error(function(xhr, status,err){
+
+        }.bind(this));
     },
     componentDidMount: function(){
         this.loadData();
