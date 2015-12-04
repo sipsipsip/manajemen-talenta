@@ -15,6 +15,9 @@ var Col = ReactBootstrap.Col;
 var Table = ReactBootstrap.Table;
 var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
+var Button = ReactBootstrap.Button;
+
+var Select = require('react-select');
 
 var math = require('mathjs');
 
@@ -70,13 +73,11 @@ var TableTalent = React.createClass({
         //     }.bind(this)
         // })
 
-        TalentSectionService.getTalentScoreList()
-        .success(function(res){
-                this.setState({items: res}, this._populateHelper);
-        }.bind(this))
-        .error(function(xhr, status,err){
-
+        TalentSectionService.getTalentScoreList(this.props.sectionID).then(function(data){
+            this.setState({items: data}, this._populateHelper);
         }.bind(this));
+        
+  
     },
     componentDidMount: function(){
         this.loadData();
@@ -173,6 +174,12 @@ var TableTalent = React.createClass({
 
         return chart_data;
     },
+
+    createNewTalentScore: function(){
+
+    },
+
+
     render: function(){
         var component = this;
 
@@ -227,6 +234,20 @@ var TableTalent = React.createClass({
                                 )
                         })}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <Select
+
+                                    />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><Button onClick={this.createNewTalentScore}>Tambah Pegawai</Button></td>
+                        </tr>   
+                    </tfoot>
                 </table>
             </div>
         )

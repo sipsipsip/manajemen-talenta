@@ -15,6 +15,7 @@ class CreateTalentGroupsTable extends Migration {
 		Schema::create('talent_groups', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->string('title');
 			$table->timestamps();
 		});
 	}

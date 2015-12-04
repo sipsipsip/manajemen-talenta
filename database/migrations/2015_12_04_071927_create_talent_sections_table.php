@@ -15,6 +15,8 @@ class CreateTalentSectionsTable extends Migration {
 		Schema::create('talent_sections', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->string('title');
+			$table->integer('group_id');
 			$table->timestamps();
 		});
 	}

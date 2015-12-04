@@ -18,6 +18,7 @@
     "react-simpletabs": "^0.7.0",
     "react-tabs": "^0.5.1",
     "react-tap-event-plugin": "^0.2.1",
-    "reactify": "^1.1.1"
+    "reactify": "^1.1.1",
+    "react-select": "^1.0.0-beta6"
   }
 }

@@ -8,7 +8,7 @@ var TalentSection = {
 	update: function(){},
 	delete: function(){},
 	getTalentScoreList: function(section_id){
-		$.ajax({
+		return $.ajax({
 			method: 'GET',
 			cache: false,
 			url: 'api/v1/talent-section/'+section_id+'/talent-score'

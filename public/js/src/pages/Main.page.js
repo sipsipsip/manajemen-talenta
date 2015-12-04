@@ -40,10 +40,10 @@ var MainPage = React.createClass({
                         </TabList>
 
                         <TabPanel>
-                            <TableTalent source="pegawai.json"/>
+                            <TableTalent sectionID={1}/>
                         </TabPanel>
                         <TabPanel>
-                            <TableTalent source="pegawai2.json"/>
+                            <TableTalent sectionID={2}/>
                         </TabPanel>
                     </Tabs>
                     

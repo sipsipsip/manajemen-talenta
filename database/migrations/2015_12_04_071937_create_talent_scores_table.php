@@ -15,6 +15,15 @@ class CreateTalentScoresTable extends Migration {
 		Schema::create('talent_scores', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->string('nama');
+			$table->integer('usia');
+			$table->string('nip');
+			$table->string('nama_jabatan');
+			$table->string('eselon');
+			$table->integer('ki');
+			$table->integer('ku');
+			$table->integer('nkp');
+			$table->integer('section_id');
 			$table->timestamps();
 		});
 	}
