@@ -24,9 +24,12 @@ var math = require('mathjs');
 var RowTalent = require('../components/RowTalent.react');
 var HelperKompetensi = require('../components/HelperKompetensi.react');
 var TableTalentSummary = require('../components/TableTalentSummary.react');
-
+var TalentChart = require('../components/TalentChart.react');
 
 var TalentSectionService = require('../services/TalentSection.service');
+var UserService = require('../services/User.service');
+var TalentScoreService = require('../services/TalentScore.service');
+var KompetensiHelper = require('../utils/kompetensi.helper');
 
 
 
@@ -35,6 +38,7 @@ var TableTalent = React.createClass({
     getInitialState: function(){
         return {
             items: [],
+            newUser: {},
             helper:{
                 max_kompetensi:0,
                 min_kompetensi:0,
@@ -46,34 +50,14 @@ var TableTalent = React.createClass({
                 alpha_low:0,
                 constant: 1.036
 
-            },
-            summary: [
-                         {
-                             value : 1,
-                             label : 'bla',
-                             color : 'blue',
-                             highlight : 'red',
-                         },
-                         {
-                             value : 4,
-                             label : 'bli',
-                             color : 'red',
-                             highlight : 'blue',
-                         }
-                     ]
+            }
         }
     },
     loadData: function(){
-        // $.ajax({
-        //     method: 'GET',
-        //     url: 'json/'+this.props.source,
-        //     cache: false,
-        //     success: function(data){
-        //         this.setState({items: data}, this._populateHelper);
-        //     }.bind(this)
-        // })
+
 
         TalentSectionService.getTalentScoreList(this.props.sectionID).then(function(data){
+            this.setState({items: []});
             this.setState({items: data}, this._populateHelper);
         }.bind(this));
         
@@ -87,28 +71,14 @@ var TableTalent = React.createClass({
         var index = this.state.items.indexOf(updated);
         var newState = this.state.items;
         newState[index] = rowValue;
-        this.setState(newState, this._populateHelper)
+        this.setState({items: newState}, this._populateHelper)
 
         status = (parseInt(rowValue.nkp) < 75) ? "rendah" : (parseInt(rowValue.nkp) < 90) ? "sedang" : "tinggi";
     },
     _populateHelper: function(){
-        var helper = this.state.helper;
-
-        items = this.state.items.map(function(item,i){
-            return parseInt(item.ku)+parseInt(item.ki)
-        });
-
-        helper.max_kompetensi = _.max(items);
-        helper.min_kompetensi = _.min(items);
-        helper.total_kompetensi = _.sum(items);
-        helper.average_kompetensi = _.sum(items) / items.length;
-        helper.std_kompetensi = math.std(items);
-        helper.constant = 1.036;
-        helper.alpha_high = helper.average_kompetensi + (helper.constant*helper.std_kompetensi);
-        helper.alpha_low = helper.average_kompetensi + (-helper.constant * helper.std_kompetensi)
-
-        this.setState({helper: helper});
-
+        console.warn('populating', this.state.items)
+        help = KompetensiHelper(this.state.items);
+        this.setState({helper: help});
         this.setState({summary: this._getSummaryData()});
 
 
@@ -176,24 +146,96 @@ var TableTalent = React.createClass({
     },
 
     createNewTalentScore: function(){
+        var talent;
+        talent = {};
+        talent.section_id = this.props.sectionID;
+        talent.nama = this.state.newUser.name;
+        talent.nip = this.state.newUser.nip;
+        talent.nama_jabatan = 'nama jabatan';
+        talent.unit = 'unit';
+        talent.eselon = 'eselon';
+        talent.ki = 0;
+        talent.ku = 0;
+        talent.nkp = 0;
+        talent.usia = new Date().getFullYear() - parseInt(this.state.newUser.nip.slice(0,4));
+
+
+        var success = function(data){
+            console.log('talent', data);
+            this.loadData();
+            this.setState({newUser: {}});
+        };
+
+        TalentScoreService.create(talent).then(success.bind(this));
+
+    },
+
+    _getListPegawai: function(input, callback){
+        console.log(input);
+        $.ajax({
+            method: 'GET',
+            url: 'api/v1/data',
+            data: {model: 'pegawai', q: input, q_identifier: 'name'},
+            cache: false,
+            success: function(data){
+                   var result;
+                   result = data.map(function(item,i){
+                    return {label: item.name, value: item.nip}
+                   });
+
+
+                   callback(null, {
+                        options: result,
+                   });
+            }.bind(this)
+        })
+
+    },
+
+    _selectChange: function(newValue){
+
+        UserService.getTalentData(newValue.value).then(function(data){
+           this.setState({newUser: data});
+        }.bind(this));
 
     },
 
 
+    _onChange: function(field, e){
+        var newState = this.state;
+        newState[field] = parseInt(e.target.value);
+        this.setState(newState, this.props.onValueChange(newState));
+    },
+
+    _onDeleteTalent: function(){
+        this.loadData();
+    },
+    _onToggleActiveStatus: function(talent){
+        var data = {}
+        data.nip = talent.nip;
+        data.section_id = talent.section_id;
+        data.active = parseInt(talent.active) ? 0 : 1;
+        $.ajax({
+            method: 'POST',
+            cache: false,
+            data: data,
+            url: 'api/v1/talent-score/'+talent.nip+'/update'
+        }).then(this.loadData);
+    },
+
     render: function(){
         var component = this;
-
         return (
             <div>
                 <HelperKompetensi data={this.state.helper}/>
-                <hr/>
+                <TalentChart data={this.state.items} />
 
-                <hr/>
                 <table className="table-striped table">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>No</th>
-                            <th>Nama Pegawai</th>
+                            <th style={{width:'300px'}}>Nama Pegawai</th>
                             <th>NIP</th>
                             <th>Usia</th>
                             <th>Unit</th>
@@ -210,44 +252,118 @@ var TableTalent = React.createClass({
                     </thead>
                     
                     <tbody>
-                        {this.state.items.map(function(item, i){
+                        {this.state.items.filter(function(item, index){return parseInt(item.active) == 1}).map(function(item, i){
                             return (
                                 <RowTalent
                                     key={i}
                                     no={i+1}
                                     nama={item.nama}
                                     nip={item.nip}
-                                    usia={34}
+                                    usia={new Date().getFullYear() - parseInt(item.nip.slice(0,4))}
                                     unit={item.unit}
                                     nama_jabatan={item.nama_jabatan}
                                     eselon={item.eselon}
                                     ku={item.ku}
                                     ki={item.ki}
                                     nkp={item.nkp}
+                                    section_id={component.props.sectionID}
+                                    active={item.active}
+                                    sectionID={item.section_id}
 
-                                    rangeKompetensi={(item.ku + item.ki) > component.state.helper.alpha_high ? "tinggi" : (item.ku + item.ki) < component.state.helper.alpha_low ? "rendah" : "sedang"}
+                                    rangeKompetensi={(parseInt(item.ku) + parseInt(item.ki)) > component.state.helper.alpha_high ? "tinggi" : (parseInt(item.ku) + parseInt(item.ki)) < component.state.helper.alpha_low ? "rendah" : "sedang"}
                                     zScore={((item.ku+item.ki) - component.state.helper.average_kompetensi) / component.state.helper.std_kompetensi}
                                     rangeNKP = {(parseInt(item.nkp) < 75) ? "rendah" : (parseInt(item.nkp) < 90) ? "sedang" : "tinggi"}
 
                                     onValueChange={component._rowValueChange}
+                                    onDelete={component._onDeleteTalent}
+                                    onToggleActiveStatus={component._onToggleActiveStatus}
                                     />
                                 )
                         })}
                     </tbody>
                     <tfoot>
+                    {/*
                         <tr>
                             <td></td>
+                            <td></td>
                             <td>
-                                <Select
 
+                                <Select.Async
+                                    value={{value: this.state.newUser.nip, label: this.state.newUser.name}}
+                                    loadOptions={this._getListPegawai}
+                                    name="pbaru"
+                                    onChange={this._selectChange}
                                     />
+
                             </td>
+                            <td>{this.state.newUser.nip}</td>
+                            <td>{undefined != this.state.newUser.nip ? new Date().getFullYear() - parseInt( this.state.newUser.nip.slice(0,4)) : ''}</td>
+                            <td>{this.state.newUser.unit}</td>
+                            <td>{this.state.newUser.nama_jabatan}</td>
+                            <td>{this.state.newUser.eselon}</td>
                         </tr>
                         <tr>
                             <td></td>
+                            <td></td>
                             <td><Button onClick={this.createNewTalentScore}>Tambah Pegawai</Button></td>
-                        </tr>   
+                        </tr>
+                        */}
                     </tfoot>
+                </table>
+
+
+                <hr/>
+                 <h3>Pegawai Tidak Dipetakan</h3>
+                <table className="table table-stripped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>No</th>
+                        <th style={{width:'300px'}}>Nama Pegawai</th>
+                        <th>NIP</th>
+                        <th>Usia</th>
+                        <th>Unit</th>
+                        <th>Nama Jabatan</th>
+                        <th>Eselon</th>
+                        <th>KU</th>
+                        <th>KI</th>
+                        <th>Kompetensi</th>
+                        <th>Range Kompetensi</th>
+                        <th>NKP</th>
+                        <th>Range NKP</th>
+                        <th>Kuadran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.state.items.filter(function(item, index){return parseInt(item.active) == 0}).map(function(item, i){
+                        return (
+                            <RowTalent
+                                key={i}
+                                no={i+1}
+                                nama={item.nama}
+                                nip={item.nip}
+                                usia={new Date().getFullYear() - parseInt(item.nip.slice(0,4))}
+                                unit={item.unit}
+                                nama_jabatan={item.nama_jabatan}
+                                eselon={item.eselon}
+                                ku={item.ku}
+                                ki={item.ki}
+                                nkp={item.nkp}
+                                section_id={component.props.sectionID}
+                                active={item.active}
+                                sectionID={item.section_id}
+
+                                rangeKompetensi={(parseInt(item.ku) + parseInt(item.ki)) > component.state.helper.alpha_high ? "tinggi" : (parseInt(item.ku) + parseInt(item.ki)) < component.state.helper.alpha_low ? "rendah" : "sedang"}
+                                zScore={((item.ku+item.ki) - component.state.helper.average_kompetensi) / component.state.helper.std_kompetensi}
+                                rangeNKP = {(parseInt(item.nkp) < 75) ? "rendah" : (parseInt(item.nkp) < 90) ? "sedang" : "tinggi"}
+
+                                onValueChange={component._rowValueChange}
+                                onDelete={component._onDeleteTalent}
+                                onToggleActiveStatus={component._onToggleActiveStatus}
+                                />
+                            )
+                    })}
+                </tbody>
                 </table>
             </div>
         )

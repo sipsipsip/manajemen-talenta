@@ -13,6 +13,8 @@ var Col = ReactBootstrap.Col;
 
 // Pages
 var MainPage = require('./pages/Main.page');
+var TalentGroup = require('./components/TalentGroup.react');
+var Summary = require('./components/Summary.react');
 
 var App = React.createClass({
 
@@ -40,6 +42,8 @@ var NotFound = React.createClass({
 var routes = (
     <Route path="/" component={App}>
       <Route path="main" component={MainPage} />
+      <Route path="talent-group/:talent_group_id/view" component={TalentGroup}/>
+      <Route path="talent-group/:talent_group_id/summary" component={Summary} />
       <Route path="*" component={NotFound}/>
     </Route>
   );

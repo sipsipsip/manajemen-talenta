@@ -3,22 +3,60 @@ var $ = require('jquery');
 var host = '';
 
 var TalentService = {
-	create: function(talent){
-		$.ajax({
-			method: 'POST',
-			cache: false,
-			url: 'api/v1/talent-score'
-		})
+	loadGroupList: function(){
+        return $.ajax({
+            method: 'GET',
+            url: 'api/v1/talent-group',
+            cache: false
+        });
 	},
-	get: function(){
-
+    loadArchivedGroupList: function(){
+        return $.ajax({
+            method: 'GET',
+            url: 'api/v1/talent-group/archived',
+            cache: false
+        });
+    },
+	createGroup: function(properties){
+	    return $.ajax({
+	        method: 'POST',
+	        data: properties,
+	        url: 'api/v1/talent-group',
+	        cache: false
+	    });
 	},
-	update: function(talent){
-
+	loadSectionOfGroup: function(group_id){
+	    return $.ajax({
+	        method: 'GET',
+	        url: 'api/v1/talent-group/'+group_id+'/talent-section',
+	        cache: false
+	    })
 	},
-	delete: function(talent){
+	deleteGroup: function(group_id){
+	    return $.ajax({
+	        method: 'POST',
+	        url: 'api/v1/talent-group/'+group_id+'/delete',
+	        cache: false
+	    });
+	},
 
-	}
+	duplicateGroup: function(group_id, group_title){
+	    return $.ajax({
+	        method: 'POST',
+	        data: {group_title: group_title},
+	        url: 'api/v1/talent-group/'+group_id+'/duplicate',
+	        cache: false
+	    });
+	},
+
+    toggleArchiveGroup: function(group_id){
+        return $.ajax({
+            method: 'POST',
+            url: 'api/v1/talent-group/'+group_id+'/toggle-archive',
+            cache: false
+        });
+    }
+
 }
 
 

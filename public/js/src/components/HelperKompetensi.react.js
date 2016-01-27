@@ -13,24 +13,42 @@ var Col = ReactBootstrap.Col;
 var Table = ReactBootstrap.Table;
 var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
+var Button = ReactBootstrap.Button;
 
 
 
 var HelperKompetensi = React.createClass({
-
-
+    getInitialState: function(){
+        return {
+            show: false
+        }
+    },
+    toggleShow: function(){
+        this.setState({show: !this.state.show});
+    },
     render: function(){
+         toggleButton = this.state.show ? 'Sembunyikan Helper' : 'Tampilkan Helper';
+         show = this.state.show ? {} : {display: 'none'}
+         bsStyle = this.state.show ? 'danger' : 'primary'
         return (
             <div>
-	            <h4>Helper Kompetensi</h4>
-	            MAX : {this.props.data.max_kompetensi} |
-	            MIN : {this.props.data.min_kompetensi} |
-	            TOTAL : {this.props.data.total_kompetensi} |
-	            AVERAGE : {this.props.data.average_kompetensi} |
-	            TALE AREA : {this.props.data.tale_area_kompetensi * 100 + '%'} |
-	            STD : {this.props.data.std_kompetensi} |
-	            ALPHA (hi) : {this.props.data.alpha_high} |
-	            ALPHA (lo) : {this.props.data.alpha_low}
+                <Button bsStyle={bsStyle} onClick={this.toggleShow} bsSize="small" style={{position: 'relative', right: '0px'}}>{toggleButton}</Button>
+	            <table className="table table-stripped" style={show}>
+	                <thead>
+                        <tr>
+                          <th>Helper Kompetensi</th>
+                          <th>MAX : {this.props.data.max_kompetensi} </th>
+                          <th>MIN : {this.props.data.min_kompetensi} </th>
+                          <th>TOTAL : {this.props.data.total_kompetensi} </th>
+                          <th>AVERAGE : {this.props.data.average_kompetensi.toFixed(2)} </th>
+                          <th>TALE AREA : {this.props.data.tale_area_kompetensi * 100 + '%'} </th>
+                          <th>Std : {this.props.data.std_kompetensi.toFixed(2)} </th>
+                          <th>ALPHA (hi) : {this.props.data.alpha_high.toFixed(2)} </th>
+                          <th>ALPHA (lo) : {this.props.data.alpha_low.toFixed(2)}</th>
+                        </tr>
+	                </thead>
+	            </table>
+
             </div>
         )
     }

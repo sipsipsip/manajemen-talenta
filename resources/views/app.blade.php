@@ -29,12 +29,12 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Manajemen Talenta</a>
+				<a class="navbar-brand" href="#/main">Manajemen Talenta</a>
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
-					<li><a href="/">Beranda</a></li>
+					<li><a href={{URL::to('/#/main')}}>Beranda</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right">

@@ -29,7 +29,34 @@ Route::get('/', function(){
 	return view('react');
 });
 
+Route::get('/report', function(){
+
+    return view('report');
+});
+
 Route::group(['prefix'=>'api/v1'], function(){
 
 	Route::get('talent-section/{id}/talent-score', 'ApiController@getTalentScoreOfSection');
+
+
+	Route::get('data', 'ApiController@getData');
+	Route::get('pegawai/{user_nip}/talent-data', 'ApiController@getDataPegawai');
+	Route::post('talent-score', 'ApiController@postTalent');
+	Route::post('talent-score/{nip}/delete', 'ApiController@deleteTalent');
+	Route::post('talent-score/{nip}/update', 'ApiController@updateTalent');
+
+	Route::get('talent-group', 'ApiController@getGroupList');
+	Route::get('talent-group/archived', 'ApiController@getArchivedGroupList');
+	Route::post('talent-group', 'ApiController@createGroup');
+	Route::get('talent-group/{group_id}/talent-section', 'ApiController@getSectionList');
+	Route::post('talent-group/{group_id}/delete', 'ApiController@deleteGroup');
+	Route::post('talent-group/{group_id}/duplicate', 'ApiController@duplicateGroup');
+	Route::post('talent-group/{group_id}/toggle-archive', 'ApiController@toggleArchiveGroup');
+
+    Route::get('talent-group/{group_id}/summary', 'ApiController@getSummary');
+
+    Route::group(['prefix'=>'report'], function(){
+        Route::get('class/{id}', 'ApiController@reportForClass');
+        Route::get('group/{id}', 'ApiController@newReportForGroup');
+    });
 });

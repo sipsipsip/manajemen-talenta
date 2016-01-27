@@ -20,12 +20,19 @@ var TalentScore = {
 	},
 	update: function(talent){
 		// TODO
+		return $.ajax({
+		    method: 'POST',
+		    cache: false,
+		    data: talent,
+		    url: 'api/v1/talent-score/'+talent.nip+'/update'
+		});
 	},
-	delete: function(talent){
+	delete: function(nip,section_id){
 		return $.ajax({
 			method: 'post',
 			cache: false,
-			url: 'api/v1/talent-score/'+id+'/delete'
+			data: {section_id: section_id},
+			url: 'api/v1/talent-score/'+nip+'/delete'
 		});
 	}
 }

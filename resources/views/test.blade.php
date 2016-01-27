@@ -1,5 +1,5 @@
 @extends('app')
-
+{!! Html::image(URL::to('api').'/'.$id) !!}
 
 @section('footer_scripts')
 
@@ -21,3 +21,9 @@
         });
     </script>
 @endsection
+
+
+I love horses and nothing is going to change that
+Love me, love my horses
+There's nothing more beautiful than woman and horses
+Saying you own a hot sports car won’t excite us.

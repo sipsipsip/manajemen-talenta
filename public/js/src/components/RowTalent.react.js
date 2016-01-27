@@ -13,7 +13,9 @@ var Col = ReactBootstrap.Col;
 var Table = ReactBootstrap.Table;
 var Td = ReactBootstrap.Td;
 var Tr = ReactBootstrap.Tr;
+var Label = ReactBootstrap.Label;
 
+var TalentScoreService = require('../services/TalentScore.service');
 
 
 var RowTalent = React.createClass({
@@ -25,9 +27,26 @@ var RowTalent = React.createClass({
         }
     },
     _onChange: function(field, e){
+        console.warn('changing')
+        var value;
+        if(!e.target.value){
+            value = 0;
+        } else {
+            value = e.target.value;
+        }
+
         var newState = this.state;
-        newState[field] = parseInt(e.target.value);
+        newState[field] = parseInt(value);
         this.setState(newState, this.props.onValueChange(newState));
+        newStateToUpload = newState;
+        delete newState.rangeKompetensi
+        delete newState.rangeNKP
+        delete newState.kuadran
+
+        TalentScoreService.update(newState).then(this._berhasilUpdateRowTalent);
+
+    },
+    _berhasilUpdateRowTalent: function(data){
     },
     componentDidMount: function(){
         this.setState({
@@ -39,7 +58,9 @@ var RowTalent = React.createClass({
             eselon: this.props.eselon,
             ku: this.props.ku,
             ki: this.props.ki,
-            nkp: this.props.nkp
+            nkp: this.props.nkp,
+            section_id: this.props.section_id,
+            active: this.props.active
         });
     },
     _getKuadran: function(){
@@ -66,10 +87,29 @@ var RowTalent = React.createClass({
         }
   
     },
+
+    _hapusTalent: function(){
+        var confirm = window.confirm('Yakin hapus?');
+
+        if(confirm){
+            TalentScoreService.delete(this.props.nip, this.props.section_id).then(this._berhasilHapus);
+        }
+    },
+
+    _berhasilHapus: function(){
+        this.props.onDelete();
+    },
+    _toggleActiveStatus: function(){
+        talent = this.props;
+        talent.active = !parseInt(this.props.active);
+        this.props.onToggleActiveStatus(talent);
+    },
+
     render: function(){
         this._getKuadran();
         return (
             <tr>
+                <td><Label style={{cursor: 'pointer'}} onClick={this._toggleActiveStatus}>{parseInt(this.props.active) == 1 ? "turunkan": "naikan"}</Label></td>
                 <td>{this.props.no}</td>
                 <td>{this.props.nama}</td>
                 <td>{this.props.nip}</td>
