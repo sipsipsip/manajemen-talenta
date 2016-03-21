@@ -63,6 +63,18 @@ return [
 			'prefix'    => '',
 			'strict'    => false,
 		],
+        
+        'production' => [
+			'driver'    => 'mysql',
+			'host'      => env('DB_HOST', 'localhost'),
+			'database'  => env('DB_DATABASE', 'ij_talents'),
+			'username'  => env('DB_USERNAME', 'root'),
+			'password'  => env('DB_PASSWORD', '41518699'),
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+			'strict'    => false,
+		],
 
 		'pgsql' => [
 			'driver'   => 'pgsql',
