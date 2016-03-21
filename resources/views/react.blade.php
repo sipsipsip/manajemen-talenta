@@ -5,5 +5,6 @@
 @endsection
 
 @section('footer_scripts')
-	<script type="text/javascript" src="http://localhost:3030/static/bundle.js"></script>
+	<!--<script type="text/javascript" src="http://localhost:3030/static/bundle.js"></script>-->
+    <script src="js/build/bundle.js"></script>
 @endsection

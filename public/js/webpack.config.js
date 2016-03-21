@@ -1,8 +1,8 @@
 module.exports = {
     context: __dirname + "/src",
     entry : [
-        'webpack-dev-server/client?http://localhost:3030',
-        'webpack/hot/only-dev-server',
+        // 'webpack-dev-server/client?http://localhost:3030',
+        // 'webpack/hot/only-dev-server',
         './app.js'
     ],
 
