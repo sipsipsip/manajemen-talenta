@@ -1,2 +1,2 @@
 # manajemen-talenta
-aplikasi manajemen talenta bagian sdm itjen
+DEPRECATED. See https://github.com/sipsipsip/talent instead
